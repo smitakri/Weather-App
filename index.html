@@ -15,8 +15,13 @@
 
         </div>
 
+        <div class="error">
+            <p>Invaild city name</p>
+
+        </div>
+
         <div class="Weather">
-            <img src="images/rain.png" class="Weather-icon">
+            <img src="images/rain.png" class="Weathericon">
             <h1 class="temp">22°c</h1>
             <h2 class="city">New York</h2>
             <div class="details">
@@ -37,6 +42,60 @@
     </div>
    </div>
 </div>
+
+<script>
+    const apiKey = "d8b15fced5dce483b83251040e7ccdfe";
+    const apiUrl = "https://api.openweathermap.org/data/2.5/weather?=&units=metric&q=";
+
+    const searchBox = document.querySelector(".search input");
+    const searchBtn = document.querySelector(".search button");
+    const Weathericon = document.querySelector(".Weathericon")
+
+
+async function checkWeather(city){
+    const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+
+    if(response.status == 404){
+        document.querySelector(".error").style.display = "block";
+        document.querySelector(".weather").style.display = "none";
+    
+    }else{
+
+    
+
+    var data = await response.json();
+
+    
+
+    document.querySelector(".city").innerHTML = data.name;
+    document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°c";
+    document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+    document.querySelector(".wind").innerHTML = data.wind.speed + " km/hr";
+
+
+    if(data.weather[0].main == "Clouds"){
+        Weathericon.src = "images/clouds.png"
+    }else if(data.weather[0].main == "Clear"){
+        Weathericon.src = "images/clear.png"
+    }else if(data.weather[0].main == "Rain"){
+        Weathericon.src = "images/rain.png"
+    }else if(data.weather[0].main == "Drizzle"){
+        Weathericon.src = "images/drizzle.png"
+    }else if(data.weather[0].main == "Mist"){
+        Weathericon.src = "images/mist.png"
+    }
+    document.querySelector(".Weather").style.display = "block";
+    document.querySelector(".error").style.display = "none";
+    
+
+}
+}
+searchBtn.addEventListener("click", ()=>{
+    checkWeather(searchBox.value);
+})
+
+
+</script>
     
 </body>
 </html>
